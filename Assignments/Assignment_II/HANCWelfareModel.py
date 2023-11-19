@@ -17,7 +17,7 @@ class HANCWelfareModelClass(EconModelClass,GEModelClass):
         # b. household
         self.grids_hh = ['a'] # grids
         self.pols_hh = ['a'] # policy functions
-        self.inputs_hh = ['r','wt'] # direct inputs
+        self.inputs_hh = ['r','wt','S','chi'] # direct inputs
         self.inputs_hh_z = [] # transition matrix inputs (not used today)
         self.outputs_hh = ['a','c','ell','l','inc','u'] # outputs
         self.intertemps_hh = ['vbeg_a'] # intertemporal variables
@@ -49,6 +49,7 @@ class HANCWelfareModelClass(EconModelClass,GEModelClass):
         par.sigma = 2.0 # CRRA coefficient
         par.varphi = 1.0 # dis-utility of labor
         par.nu = 1.0 # inverse Frisch elasticity of labor supply
+        par.omega = 2.0 
 
         # b. income parameters
         par.rho_z = 0.96 # AR(1) parameter

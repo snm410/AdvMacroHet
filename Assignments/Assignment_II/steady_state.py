@@ -65,10 +65,11 @@ def obj_ss(KL,model,do_print=False):
     ss.S = np.min((ss.G,par.Gamma_G*ss.L_G))
     ss.chi = par.chi_ss
     ss.tau = (ss.G + ss.w*ss.L_G + ss.chi)/(ss.w*ss.L_hh)
+    # print(ss.tau)
 
     # d. households
     ss.wt = (1-ss.tau)*ss.w
-    
+    # print(ss.u)
     model.solve_hh_ss(do_print=do_print)
     model.simulate_hh_ss(do_print=do_print)
 
@@ -81,7 +82,7 @@ def obj_ss(KL,model,do_print=False):
     ss.A = ss.K
     ss.clearing_A = ss.A - ss.A_hh
     ss.clearing_L = ss.L_Y + ss.L_G - ss.L_hh
-    ss.clearing_Y = ss.Y - (ss.C_hh+ss.I)
+    ss.clearing_Y = ss.Y + ss.G - (ss.C_hh+ss.I)
 
     return ss.clearing_A
 
@@ -117,6 +118,8 @@ def find_ss(model,KL_min=None,KL_max=None,do_print=False):
         print(f'{ss.L_G = :6.3f}')
         print(f'{ss.G = :6.3f}')
         print(f'{ss.Y = :6.3f}')
+        print(f'{ss.C_hh = :6.3f}')
+        print(f'{ss.I = :6.3f}')
         print(f'{ss.r = :6.3f}')
         print(f'{ss.w = :6.3f}')
         print(f'{ss.chi = :6.3f}')
