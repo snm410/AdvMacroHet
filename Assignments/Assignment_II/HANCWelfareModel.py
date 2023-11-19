@@ -23,8 +23,8 @@ class HANCWelfareModelClass(EconModelClass,GEModelClass):
         self.intertemps_hh = ['vbeg_a'] # intertemporal variables
 
         # c. GE
-        self.shocks = [] # exogenous shocks
-        self.unknowns = ['K','L'] # endogenous unknowns
+        self.shocks = ['G','L_G','chi'] # exogenous shocks
+        self.unknowns = ['K','L_Y','S','tau'] # endogenous unknowns
         self.targets = ['clearing_A','clearing_L'] # targets = 0
         self.blocks = [ # list of strings to block-functions
             'blocks.production_firm',
@@ -56,6 +56,7 @@ class HANCWelfareModelClass(EconModelClass,GEModelClass):
 
         # c. production and investment
         par.Gamma_Y = 1.0 # technology level
+        par.Gamma_G = 1.0 # government technology level
         par.alpha = 0.30 # cobb-douglas coefficient
         par.delta = 0.10 # depreciation rate
 
@@ -64,7 +65,9 @@ class HANCWelfareModelClass(EconModelClass,GEModelClass):
         par.Na = 100 # number of grid points
 
         # e. government
-        par.tau_ss = 0.00 # tax rate on wage income
+        par.G_ss = 0.00 
+        par.L_G_ss = 0.00 
+        par.chi_ss = 0.00 
 
         # e. misc.
         par.max_iter_ell = 200 # maximum number of iterations when solving for ell 

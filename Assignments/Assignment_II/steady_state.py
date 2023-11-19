@@ -60,7 +60,11 @@ def obj_ss(KL,model,do_print=False):
     ss.r = ss.rK - par.delta
 
     # c. government
-    ss.tau = par.tau_ss
+    ss.G = par.G_ss
+    ss.L_G = par.L_G_ss
+    ss.S = np.min((ss.G,par.Gamma_G*ss.L_G))
+    ss.chi = par.chi_ss
+    ss.tau = (ss.G + ss.w*ss.L_G + ss.chi)/(ss.w*ss.L_hh)
 
     # d. households
     ss.wt = (1-ss.tau)*ss.w
@@ -69,14 +73,14 @@ def obj_ss(KL,model,do_print=False):
     model.simulate_hh_ss(do_print=do_print)
 
     # e. market clearing
-    ss.B = 0.0
-    ss.L = ss.L_hh
-    ss.K = KL*ss.L
-    ss.Y = par.Gamma_Y*ss.K**(par.alpha)*ss.L**(1-par.alpha)
+    ss.B = ss.G + ss.w*ss.L_G + ss.chi - ss.tau*ss.w*ss.L_hh
+    ss.L_Y = ss.L_hh - ss.L_G
+    ss.K = KL*ss.L_Y
+    ss.Y = par.Gamma_Y*ss.K**(par.alpha)*ss.L_Y**(1-par.alpha)
     ss.I = par.delta*ss.K
-    ss.A = ss.K + ss.B
+    ss.A = ss.K
     ss.clearing_A = ss.A - ss.A_hh
-    ss.clearing_L = ss.L - ss.L_hh
+    ss.clearing_L = ss.L_Y + ss.L_G - ss.L_hh
     ss.clearing_Y = ss.Y - (ss.C_hh+ss.I)
 
     return ss.clearing_A
@@ -105,13 +109,17 @@ def find_ss(model,KL_min=None,KL_max=None,do_print=False):
     if do_print:
 
         print(f'steady state found in {elapsed(t0)}')
+        print(f'{ss.tau = :6.3f}')
         print(f'{ss.K = :6.3f}')
         print(f'{ss.B = :6.3f}')
         print(f'{ss.A_hh = :6.3f}')
-        print(f'{ss.L = :6.3f}')
+        print(f'{ss.L_Y = :6.3f}')
+        print(f'{ss.L_G = :6.3f}')
+        print(f'{ss.G = :6.3f}')
         print(f'{ss.Y = :6.3f}')
         print(f'{ss.r = :6.3f}')
         print(f'{ss.w = :6.3f}')
+        print(f'{ss.chi = :6.3f}')
         print(f'{ss.clearing_A = :.2e}')
         print(f'{ss.clearing_L = :.2e}')
         print(f'{ss.clearing_Y = :.2e}')
