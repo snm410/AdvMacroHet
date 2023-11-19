@@ -69,7 +69,7 @@ def obj_ss(KL,model,do_print=False):
 
     # d. households
     ss.wt = (1-ss.tau)*ss.w
-    # print(ss.u)
+
     model.solve_hh_ss(do_print=do_print)
     model.simulate_hh_ss(do_print=do_print)
 
@@ -77,12 +77,16 @@ def obj_ss(KL,model,do_print=False):
     ss.B = ss.G + ss.w*ss.L_G + ss.chi - ss.tau*ss.w*ss.L_hh
     ss.L_Y = ss.L_hh - ss.L_G
     ss.K = KL*ss.L_Y
-    ss.Y = par.Gamma_Y*ss.K**(par.alpha)*ss.L_Y**(1-par.alpha)
+    ss.Y = par.Gamma_Y*ss.K**(par.alpha)*(ss.L_Y)**(1-par.alpha)
     ss.I = par.delta*ss.K
-    ss.A = ss.K
+    ss.A = ss.K 
     ss.clearing_A = ss.A - ss.A_hh
     ss.clearing_L = ss.L_Y + ss.L_G - ss.L_hh
-    ss.clearing_Y = ss.Y + ss.G - (ss.C_hh+ss.I)
+    ss.clearing_Y = ss.Y - (ss.C_hh+ss.I)
+
+    # Pi = ss.Y - ss.w*(ss.L_Y) - ss.rK*ss.K
+    # print(Pi) 
+
 
     return ss.clearing_A
 
@@ -95,7 +99,7 @@ def find_ss(model,KL_min=None,KL_max=None,do_print=False):
     ss = model.ss
 
     if KL_min is None: KL_min = ((1/par.beta+par.delta-1)/(par.alpha*par.Gamma_Y))**(1/(par.alpha-1)) + 1e-2
-    if KL_max is None: KL_max = (par.delta/(par.alpha*par.Gamma_Y))**(1/(par.alpha-1))-1e-2
+    if KL_max is None: KL_max = (par.delta/(par.alpha*par.Gamma_Y))**(1/(par.alpha-1))-1e-2 
 
     # a. solve for K and L
     if do_print:
@@ -111,12 +115,15 @@ def find_ss(model,KL_min=None,KL_max=None,do_print=False):
 
         print(f'steady state found in {elapsed(t0)}')
         print(f'{ss.tau = :6.3f}')
+        print(f'{ss.U_hh = :6.3f}')
         print(f'{ss.K = :6.3f}')
         print(f'{ss.B = :6.3f}')
         print(f'{ss.A_hh = :6.3f}')
         print(f'{ss.L_Y = :6.3f}')
         print(f'{ss.L_G = :6.3f}')
+        print(f'{ss.L_hh = :6.3f}')
         print(f'{ss.G = :6.3f}')
+        print(f'{ss.S = :6.3f}')
         print(f'{ss.Y = :6.3f}')
         print(f'{ss.C_hh = :6.3f}')
         print(f'{ss.I = :6.3f}')

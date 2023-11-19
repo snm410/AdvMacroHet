@@ -22,8 +22,8 @@ def solve_hh_backwards(par,z_trans,wt,r,S,vbeg_a_plus,vbeg_a,a,c,ell,l,inc,chi,u
             l_endo = ell_endo*z
 
             # iii. re-interpolate
-            m_endo = c_endo + par.a_grid - wt*l_endo
-            m_exo = (1+r)*par.a_grid
+            m_endo = c_endo + par.a_grid - wt*l_endo  
+            m_exo = (1+r)*par.a_grid + chi
 
             interp_1d_vec(m_endo,c_endo,m_exo,c[i_fix,i_z,:])
             interp_1d_vec(m_endo,ell_endo,m_exo,ell[i_fix,i_z,:])
@@ -67,10 +67,12 @@ def solve_hh_backwards(par,z_trans,wt,r,S,vbeg_a_plus,vbeg_a,a,c,ell,l,inc,chi,u
 
                     break
 
-        inc[i_fix] = wt*l[i_fix] + r*par.a_grid
+        inc[i_fix] = wt*l[i_fix] + r*par.a_grid 
         # print((S)**(1-par.omega)/(1-par.omega))
-        # u[i_fix,:,:] = c[i_fix]**(1-par.sigma)/(1-par.sigma) + (S/100)**(1-par.omega)/(1-par.omega) - par.varphi*ell[i_fix]**(1+par.nu)/(1+par.nu)
-        u[i_fix,:,:] = c[i_fix]**(1-par.sigma)/(1-par.sigma) - par.varphi*ell[i_fix]**(1+par.nu)/(1+par.nu)
+        if S>0:
+            u[i_fix,:,:] = c[i_fix]**(1-par.sigma)/(1-par.sigma) + S**(1-par.omega)/(1-par.omega) - par.varphi*ell[i_fix]**(1+par.nu)/(1+par.nu)
+        else:
+            u[i_fix,:,:] = c[i_fix]**(1-par.sigma)/(1-par.sigma) - par.varphi*ell[i_fix]**(1+par.nu)/(1+par.nu)
      
         # b. expectation step
         v_a = c[i_fix]**(-par.sigma)
