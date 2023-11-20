@@ -80,10 +80,10 @@ class HANCWelfareModelClass(EconModelClass,GEModelClass):
         par.tol_simulate = 1e-12 # tolerance when simulating household problem
         par.tol_broyden = 1e-10 # tolerance when solving eq. system
 
-        par.tol_ell = 1e-7 # tolerance when solving for ell 
-        par.tol_solve = 1e-7 # tolerance when solving household problem
-        par.tol_simulate = 1e-7 # tolerance when simulating household problem
-        par.tol_broyden = 1e-6 # tolerance when solving eq. system
+        # par.tol_ell = 1e-7 # tolerance when solving for ell 
+        # par.tol_solve = 1e-7 # tolerance when solving household problem
+        # par.tol_simulate = 1e-7 # tolerance when simulating household problem
+        # par.tol_broyden = 1e-6 # tolerance when solving eq. system
 
 
     def allocate(self):

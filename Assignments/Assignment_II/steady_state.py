@@ -65,13 +65,16 @@ def obj_ss(KL,model,do_print=False):
     ss.S = np.min((ss.G,par.Gamma_G*ss.L_G))
     ss.chi = par.chi_ss
     ss.tau = (ss.G + ss.w*ss.L_G + ss.chi)/(ss.w*ss.L_hh)
-    # print(ss.tau)
+    print(f'tau = {ss.tau}')
+    print(f'w = {ss.w}')
 
     # d. households
     ss.wt = (1-ss.tau)*ss.w
 
     model.solve_hh_ss(do_print=do_print)
     model.simulate_hh_ss(do_print=do_print)
+    print(f'KL = {KL}')
+    print(f'L_hh = {ss.L_hh}')
 
     # e. market clearing
     ss.B = ss.G + ss.w*ss.L_G + ss.chi - ss.tau*ss.w*ss.L_hh
@@ -82,11 +85,10 @@ def obj_ss(KL,model,do_print=False):
     ss.A = ss.K 
     ss.clearing_A = ss.A - ss.A_hh
     ss.clearing_L = ss.L_Y + ss.L_G - ss.L_hh
-    ss.clearing_Y = ss.Y - (ss.C_hh+ss.I)
+    ss.clearing_Y = ss.Y - ss.G - (ss.C_hh+ss.I)
 
     # Pi = ss.Y - ss.w*(ss.L_Y) - ss.rK*ss.K
     # print(Pi) 
-
 
     return ss.clearing_A
 
@@ -98,8 +100,8 @@ def find_ss(model,KL_min=None,KL_max=None,do_print=False):
     par = model.par
     ss = model.ss
 
-    if KL_min is None: KL_min = ((1/par.beta+par.delta-1)/(par.alpha*par.Gamma_Y))**(1/(par.alpha-1)) + 1e-2
-    if KL_max is None: KL_max = (par.delta/(par.alpha*par.Gamma_Y))**(1/(par.alpha-1))-1e-2 
+    if KL_min is None: KL_min = ((1/par.beta+par.delta-1)/(par.alpha*par.Gamma_Y))**(1/(par.alpha-1)) + 1e-2 
+    if KL_max is None: KL_max = (par.delta/(par.alpha*par.Gamma_Y))**(1/(par.alpha-1))-1e-2
 
     # a. solve for K and L
     if do_print:
